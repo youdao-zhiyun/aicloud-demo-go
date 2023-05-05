@@ -1,8 +1,8 @@
 package main
 
 import (
-	"demo/utils"
-	"demo/utils/authv4"
+	"demo/apidemo/utils"
+	"demo/apidemo/utils/authv4"
 	"fmt"
 	"github.com/gorilla/websocket"
 )

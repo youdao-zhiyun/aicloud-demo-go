@@ -1,8 +1,8 @@
 package main
 
 import (
-	"demo/utils"
-	"demo/utils/authv3"
+	"demo/apidemo/utils"
+	"demo/apidemo/utils/authv3"
 	"fmt"
 )
 

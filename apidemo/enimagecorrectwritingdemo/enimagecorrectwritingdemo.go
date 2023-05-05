@@ -1,8 +1,8 @@
 package main
 
 import (
-	"demo/utils"
-	"demo/utils/authv3"
+	utils2 "demo/apidemo/utils"
+	"demo/apidemo/utils/authv3"
 	"fmt"
 )
 
@@ -24,7 +24,7 @@ func main() {
 	// 添加鉴权相关参数
 	authv3.AddAuthParams(appKey, appSecret, paramsMap)
 	// 请求api服务
-	result := utils.DoPost("https://openapi.youdao.com/v2/correct_writing_image", header, paramsMap, "application/json")
+	result := utils2.DoPost("https://openapi.youdao.com/v2/correct_writing_image", header, paramsMap, "application/json")
 	// 打印返回结果
 	if result != nil {
 		fmt.Print(string(result))
@@ -45,7 +45,7 @@ func createRequestParams() map[string][]string {
 	isNeedEssayReport := "是否返回写作报告"
 
 	// 数据的base64编码
-	q, err := utils.ReadFileAsBase64(path)
+	q, err := utils2.ReadFileAsBase64(path)
 	if err != nil {
 		return nil
 	}

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"demo/utils"
-	"demo/utils/authv3"
+	"demo/apidemo/utils"
+	"demo/apidemo/utils/authv3"
 	"fmt"
 )
 
@@ -21,7 +21,7 @@ func main() {
 	// 添加鉴权相关参数
 	authv3.AddAuthParams(appKey, appSecret, paramsMap)
 	// 请求api服务
-	result := utils.DoPost("https://openapi.youdao.com/v2/correct_writing_text", header, paramsMap, "application/json")
+	result := utils.DoPost("https://openapi.youdao.com/correct_writing_cn_text", header, paramsMap, "application/json")
 	// 打印返回结果
 	if result != nil {
 		fmt.Print(string(result))
@@ -37,18 +37,12 @@ func createRequestParams() map[string][]string {
 	q := "正文文本"
 	grade := "作文等级"
 	title := "作文标题"
-	modelContent := "作文参考范文"
-	isNeedSynonyms := "是否查询同义词"
-	correctVersion := "作文批改版本：基础，高级"
-	isNeedEssayReport := "是否返回写作报告"
+	requirement := "题目要求"
 
 	return map[string][]string{
-		"q":                 {q},
-		"grade":             {grade},
-		"title":             {title},
-		"modelContent":      {modelContent},
-		"isNeedSynonyms":    {isNeedSynonyms},
-		"correctVersion":    {correctVersion},
-		"isNeedEssayReport": {isNeedEssayReport},
+		"q":           {q},
+		"grade":       {grade},
+		"title":       {title},
+		"requirement": {requirement},
 	}
 }

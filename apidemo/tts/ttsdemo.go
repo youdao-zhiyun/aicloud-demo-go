@@ -1,8 +1,8 @@
 package main
 
 import (
-	"demo/utils"
-	"demo/utils/authv3"
+	utils2 "demo/apidemo/utils"
+	"demo/apidemo/utils/authv3"
 )
 
 // 您的应用ID
@@ -23,10 +23,10 @@ func main() {
 	// 添加鉴权相关参数
 	authv3.AddAuthParams(appKey, appSecret, paramsMap)
 	// 请求api服务
-	result := utils.DoPost("https://openapi.youdao.com/ttsapi", header, paramsMap, "audio")
+	result := utils2.DoPost("https://openapi.youdao.com/ttsapi", header, paramsMap, "audio")
 	// 打印返回结果
 	if result != nil {
-		utils.SaveFile(path, result, false)
+		utils2.SaveFile(path, result, false)
 		print("save file path: " + path)
 	}
 
