@@ -87,12 +87,12 @@ func main() {
 			return
 		}
 
-		chunkFile, err := os.Create("D:\\" + strconv.Itoa(i) + ".wav")
+		sliceFilePath := "D:\\longFormAsrDemo-" + strconv.FormatInt(time.Now().Unix(), 10) + "-" + strconv.Itoa(i) + ".wav"
+		chunkFile, err := os.Create(sliceFilePath)
 		if err != nil {
 			fmt.Println("create file error: ", err)
 			return
 		}
-		defer chunkFile.Close()
 
 		_, err = chunkFile.Write(buffer[:n])
 		if err != nil {
@@ -103,7 +103,12 @@ func main() {
 		/*
 			note: 将下列变量替换为需要请求的参数:临时文件的保存地址及格式
 		*/
-		uploadResult := uploadHelper(taskId, i, "D:\\"+strconv.Itoa(i)+".wav")
+		uploadResult := uploadHelper(taskId, i, sliceFilePath)
+		chunkFile.Close()
+		err = os.Remove(sliceFilePath)
+		if err != nil {
+			fmt.Print(err)
+		}
 		if uploadResult == "" {
 			fmt.Println("upload failed")
 			return
@@ -190,7 +195,7 @@ func prepareHelper() string {
 		note: 将下列变量替换为需要请求的参数
 		取值参考文档：https://ai.youdao.com/DOCSIRMA/html/tts/api/cyyzx/index.html
 	*/
-	langType := "要转写的音频文件的语种"
+	langType := "待转写的音频文件的语种"
 
 	paramsMap := map[string][]string{
 		"name":     {name},

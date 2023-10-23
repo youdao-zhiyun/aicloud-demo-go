@@ -75,6 +75,31 @@ func DoPost(url string, header map[string][]string, bodyMap map[string][]string,
 	return body
 }
 
+func DoPostWithJson(url string, header map[string][]string, requestParams []byte, expectContentType string) []byte {
+	client := &http.Client{
+		Timeout: time.Second * 3,
+	}
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(requestParams))
+	for k, v := range header {
+		for hv := range v {
+			req.Header.Add(k, v[hv])
+		}
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Print("request failed:", err)
+		return nil
+	}
+	defer res.Body.Close()
+	body, _ := io.ReadAll(res.Body)
+	contentType := res.Header.Get("Content-Type")
+	if !strings.Contains(contentType, expectContentType) {
+		print(string(body))
+		return nil
+	}
+	return body
+}
+
 func DoPostWithFile(url string, header map[string][]string, bodyMap map[string][]string, fileName string, filePath string, expectContentType string) []byte {
 	if filePath == "" {
 		DoPost(url, header, bodyMap, expectContentType)

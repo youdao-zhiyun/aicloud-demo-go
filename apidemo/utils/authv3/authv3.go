@@ -40,6 +40,19 @@ func AddAuthParams(appKey string, appSecret string, params map[string][]string) 
 	params["sign"] = []string{sign}
 }
 
+func AddAuthParamsWithQ(appKey string, appSecret string, q string) map[string]interface{} {
+	salt := getUuid()
+	curtime := strconv.FormatInt(time.Now().Unix(), 10)
+	sign := CalculateSign(appKey, appSecret, q, salt, curtime)
+	return map[string]interface{}{
+		"appKey":   appKey,
+		"salt":     salt,
+		"curtime":  curtime,
+		"signType": "v3",
+		"sign":     sign,
+	}
+}
+
 /*
 CalculateSign 计算v3鉴权签名 -
 计算方式 : sign = sha256(appKey + input(q) + salt + curtime + appSecret)
