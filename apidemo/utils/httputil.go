@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io"
@@ -11,6 +12,75 @@ import (
 	"strings"
 	"time"
 )
+
+func DoGetBySSE(url string, header map[string][]string, paramsMap map[string][]string) chan string {
+	client := &http.Client{
+		Timeout: time.Second * 3,
+	}
+	params := neturl.Values{}
+	for k, v := range paramsMap {
+		params[k] = v
+	}
+	parseUrl, _ := neturl.Parse(url)
+	parseUrl.RawQuery = params.Encode()
+
+	req, _ := http.NewRequest("GET", parseUrl.String(), nil)
+	for k, v := range header {
+		for hv := range v {
+			req.Header.Add(k, v[hv])
+		}
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Print("request failed:", err)
+		return nil
+	}
+	events := make(chan string)
+	reader := bufio.NewReader(res.Body)
+	go loop(reader, events)
+	return events
+}
+
+func DoPostBySSE(url string, header map[string][]string, bodyMap map[string][]string) chan string {
+	client := &http.Client{
+		Timeout: time.Second * 3,
+	}
+	params := neturl.Values{}
+	for k, v := range bodyMap {
+		for pv := range v {
+			params.Add(k, v[pv])
+		}
+	}
+	req, _ := http.NewRequest("POST", url, strings.NewReader(params.Encode()))
+	for k, v := range header {
+		for hv := range v {
+			req.Header.Add(k, v[hv])
+		}
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Print("request failed:", err)
+		return nil
+	}
+	events := make(chan string)
+	reader := bufio.NewReader(res.Body)
+	go loop(reader, events)
+	return events
+}
+
+func loop(reader *bufio.Reader, events chan string) {
+	for {
+		line, err := reader.ReadBytes('\n')
+		if err != nil {
+			if err != io.EOF {
+				fmt.Fprintf(os.Stderr, "error during resp.Body read:%s\n", err)
+			}
+			close(events)
+			return
+		}
+		events <- string(line)
+	}
+}
 
 func DoGet(url string, header map[string][]string, paramsMap map[string][]string, expectContentType string) []byte {
 	client := &http.Client{
