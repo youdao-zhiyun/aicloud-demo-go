@@ -21,7 +21,7 @@ func main() {
 	// 添加鉴权相关参数
 	authv3.AddXiaopAuthParams(appKey, appSecret, paramsMap)
 	// 请求api服务
-	result := utils.DoPost("https://openapi.youdao.com/llmserver/plugin/suggest", header, paramsMap)
+	result := utils.DoPost("https://openapi.youdao.com/llmserver/plugin/suggest", header, paramsMap, "application/json")
 	// 打印返回结果
     if result != nil {
         fmt.Print(string(result))

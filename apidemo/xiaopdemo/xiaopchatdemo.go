@@ -21,7 +21,7 @@ func main() {
 	// 添加鉴权相关参数
 	authv3.AddXiaopAuthParams(appKey, appSecret, paramsMap)
 	// 请求api服务
-	events := utils.DoPostBySSE("https://openapi.youdao.com/llmserver/ai/teacher/dialogue/chat", header, paramsMap, "application/json")
+	events := utils.DoPostBySSE("https://openapi.youdao.com/llmserver/ai/teacher/dialogue/chat", header, paramsMap)
 	for event := range events {
 		// 处理接收到的事件
 		fmt.Println(event)
