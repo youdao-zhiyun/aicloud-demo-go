@@ -40,6 +40,28 @@ func AddAuthParams(appKey string, appSecret string, params map[string][]string) 
 	params["sign"] = []string{sign}
 }
 
+/*
+AddAuthParams 添加鉴权相关参数(下划线格式) -
+appKey : 应用ID
+salt : 随机值
+curtime : 当前时间戳(秒)
+signType : 签名版本
+sign : 请求签名
+@param appKey    您的应用ID
+@param appSecret 您的应用密钥
+@param paramsMap 请求参数表
+*/
+func AddXiaopAuthParams(appKey string, appSecret string, params map[string][]string) {
+	salt := getUuid()
+	curtime := strconv.FormatInt(time.Now().Unix(), 10)
+	sign := CalculateSign(appKey, appSecret, curtime, salt, curtime)
+	params["app_key"] = []string{appKey}
+	params["salt"] = []string{salt}
+	params["curtime"] = []string{curtime}
+	params["sign_type"] = []string{"v3"}
+	params["sign"] = []string{sign}
+}
+
 func AddAuthParamsWithQ(appKey string, appSecret string, q string) map[string]interface{} {
 	salt := getUuid()
 	curtime := strconv.FormatInt(time.Now().Unix(), 10)
