@@ -21,7 +21,7 @@ func main() {
 	// 添加鉴权相关参数
 	authv3.AddXiaopAuthParams(appKey, appSecret, paramsMap)
 	// 请求api服务
-	result := utils.DoPost("https://openapi.youdao.com/llmserver/ai/teacher/dialogue/chat", header, paramsMap)
+	result := utils.DoPost("https://openapi.youdao.com/llmserver/plugin/suggest", header, paramsMap)
 	// 打印返回结果
     if result != nil {
         fmt.Print(string(result))
@@ -40,8 +40,7 @@ func createRequestParams() map[string][]string {
 
 	return map[string][]string{
 		"user_id":    {userId},
-		"task_name":    {taskName},
-		"chat_info": {chatInfo},
-		"to":   {to},
+		"query":    {query},
+		"answer": {answer},
 	}
 }
