@@ -32,7 +32,7 @@ func createRequestParams() map[string][]string {
 
 	/*
 		note: 将下列变量替换为需要请求的参数
-		取值参考文档: https://ai.youdao.com/DOCSIRMA/html/trans/api/xpls/index.html
+		取值参考文档: https://ai.youdao.com/DOCSIRMA/html/learn/api/xpls/index.html
 	*/
 	userId := "user_test"
 	query := "背诵静夜思"
