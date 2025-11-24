@@ -223,3 +223,44 @@ func DoPostWithFile(url string, header map[string][]string, bodyMap map[string][
 	}
 	return body
 }
+
+// DoPostMultipart 发送 multipart/form-data POST 请求
+// 参数:
+// url: 请求地址
+// fields: 表单字段 map[string]string
+// expectContentType: 期望的响应内容类型
+func DoPostMultipart(url string, fields map[string]string, expectContentType string) []byte {
+	requestBody := &bytes.Buffer{}
+	writer := multipart.NewWriter(requestBody)
+
+	// 添加表单字段
+	for key, value := range fields {
+		writer.WriteField(key, value)
+	}
+
+	// 关闭 multipart writer
+	writer.Close()
+
+	// 创建请求
+	httpRequest, _ := http.NewRequest("POST", url, requestBody)
+	httpRequest.Header.Set("Content-Type", writer.FormDataContentType())
+
+	// 发送请求
+	client := &http.Client{
+		Timeout: time.Second * 30,
+	}
+	res, err := client.Do(httpRequest)
+	if err != nil {
+		fmt.Print("request failed:", err)
+		return nil
+	}
+	defer res.Body.Close()
+
+	body, _ := io.ReadAll(res.Body)
+	contentType := res.Header.Get("Content-Type")
+	if !strings.Contains(contentType, expectContentType) {
+		print(string(body))
+		return nil
+	}
+	return body
+}
